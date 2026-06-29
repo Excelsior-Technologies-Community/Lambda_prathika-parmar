@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/* --- 1. THE LAMBDA BRAND DESIGN SYSTEM --- */
+@theme {
+  /* Core Colors */
+  --color-lambda-primary: #f5a623;       /* Signature golden-amber CTA color */
+  --color-lambda-primary-hover: #d98e1c; /* Slightly darker amber for hover states */
+  --color-lambda-dark: #1e2228;          /* Deep charcoal for footer & primary headings */
+  --color-lambda-darker: #15181c;        /* Bottom footer copyright strip */
+  --color-lambda-bg: #f4f6f8;            /* Soft off-white global page background */
+  --color-lambda-card: #ffffff;          /* Pure white for cards and content boxes */
+  
+  /* Typography & Borders */
+  --color-lambda-text: #334155;          /* Crisp body text (slate-700) */
+  --color-lambda-muted: #64748b;         /* Subtitles & metadata (slate-500) */
+  --color-lambda-border: #e2e8f0;        /* Subtle card dividers (slate-200) */
+
+  /* Feature Box Pastel Tints */
+  --color-tint-amber: #fef3c7;
+  --color-tint-cream: #fffbeb;
+  --color-tint-emerald: #d1fae5;
+
+  /* Font Family */
+  --font-sans: "Inter", "Open Sans", system-ui, -apple-system, sans-serif;
+}
+
+/* --- 2. GLOBAL BASE STYLES --- */
+@layer base {
+  body {
+    background-color: var(--color-lambda-bg);
+    color: var(--color-lambda-text);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-lambda-dark);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* --- 3. REUSABLE COMPONENT CLASSES --- */
+@layer components {
+  /* Signature Golden CTA Button ("Click to enter this course") */
+  .btn-lambda-primary {
+    background-color: var(--color-lambda-primary);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(245, 166, 35, 0.2);
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-lambda-primary:hover {
+    background-color: var(--color-lambda-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(245, 166, 35, 0.35);
+  }
+
+  /* Text Link Button ("More...") */
+  .btn-lambda-link {
+    color: var(--color-lambda-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color 0.15s ease;
+  }
+
+  .btn-lambda-link:hover {
+    color: var(--color-lambda-primary-hover);
+    text-decoration: underline;
+  }
+
+  /* Standard White Grid Card (Announcements & Features) */
+  .card-lambda {
+    background-color: var(--color-lambda-card);
+    border: 1px solid var(--color-lambda-border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-lambda:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Horizontal Course Row Card ("Available courses") */
+  .course-row-lambda {
+    background-color: var(--color-lambda-card);
+    border: 1px solid var(--color-lambda-border);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s ease;
+  }
+
+  .course-row-lambda:hover {
+    border-color: var(--color-lambda-primary);
+  }
+
+  @media (min-width: 768px) {
+    .course-row-lambda {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  /* Section Titles */
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-header h2 {
+    font-size: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-header p {
+    color: var(--color-lambda-muted);
+    font-size: 1.1rem;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+}

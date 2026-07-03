@@ -1,9 +1,11 @@
-const express = require('express');
+import express from 'express';
+import UserController from '../controller/UserController.js';
+
 const router = express.Router();
-const userController = require('../controller/userController')
 
-router.post('/register', userController.register);
-router.post('/login', userController.login);
-// router.get('/', userController.getUsers);
+console.log("Login is function:", typeof UserController.login === 'function');
 
-module.exports = router;
+router.post('/register', UserController.register);
+router.get('/login', UserController.login);
+
+export default router;

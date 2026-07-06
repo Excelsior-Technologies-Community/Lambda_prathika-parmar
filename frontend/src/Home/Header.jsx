@@ -50,7 +50,7 @@ export default function Header() {
                 <span className="px-2.5 bg-gray-100 border-r border-gray-300 text-gray-500 h-full flex items-center">
                   <FaLock className="text-xs" />
                 </span>
-                <input type="password" placeholder="Password" className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
+                <input type="password" placeholder="Password" autoComplete='current-password' className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
               </div>
 
               {/* Submit Button */}
@@ -83,7 +83,7 @@ export default function Header() {
                 Courses <FaChevronDown className="text-[10px] opacity-70" />
               </button>
               <div className="absolute left-0 top-full hidden group-hover:block w-56 bg-white text-gray-800 shadow-xl rounded-b border-t-2 border-lambda-primary py-2 z-50">
-                <a href="#all" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">All courses</a>
+                <a href="/courses" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">All courses</a>
                 <a href="#sample" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Sample course</a>
                 <a href="#tiles" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Tiles course format</a>
                 <a href="#butons" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Buttons course format</a>

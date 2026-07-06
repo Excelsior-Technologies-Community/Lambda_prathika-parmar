@@ -6,6 +6,7 @@ import Header from './Home/Header';
 import Footer from './Home/Footer';
 import FeaturesPage from './Pages/FeaturePage';
 import ImageGallery from './Pages/ImageGallery';
+import CourseCatalog from './components/CourseCatalog';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/features" element={<FeaturesPage />} />
+      <Route path="/courses" element={<CourseCatalog />} />
       <Route path='/image' element={<ImageGallery />} /> 
       </Routes>
         </main>

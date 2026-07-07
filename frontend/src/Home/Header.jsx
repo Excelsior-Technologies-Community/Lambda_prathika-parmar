@@ -116,7 +116,7 @@ export default function Header() {
                 <a href="#contactus" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Contact Us</a>
                 <a href="/image" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Image Gallery</a>
                 <a href="#faq" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">FAQ</a>
-                <a href="#loginpage" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Login Page</a>
+                <a href="/login" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Login Page</a>
               </div>
             </div>
 

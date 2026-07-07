@@ -6,6 +6,6 @@ const router = express.Router();
 console.log("Login is function:", typeof UserController.login === 'function');
 
 router.post('/register', UserController.register);
-router.get('/login', UserController.login);
+router.post('/login', UserController.login);
 
 export default router;

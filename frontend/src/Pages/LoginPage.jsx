@@ -36,9 +36,9 @@ export default function LoginPage() {
     
     // 2. ROLE BASED REDIRECTION
     if (data.user.role === 'admin') {
-        navigate('/admin'); // Admin dashboard par bhejein
+        navigate('/admin'); // Admin 
     } else {
-        navigate('/');      // Normal user ko Home page par
+        navigate('/');      // user
     }
 } else {
     setError(data.error || "Login failed");

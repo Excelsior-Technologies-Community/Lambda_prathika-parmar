@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-/**
- * Admin Dashboard - Optimized and dependency-free
- */
-export default function App() {
+export default function AdminPanel() {
   const [activeView, setActiveView] = useState('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Simple SVG Icons for UI
   const Icon = ({ d }) => (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={d} />
     </svg>
   );
@@ -22,10 +19,10 @@ export default function App() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50 text-slate-800">
+    <div className="flex h-screen bg-gray-50 text-slate-800 font-sans">
       {/* Sidebar */}
-      <aside className={`bg-slate-900 text-white transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
-        <div className="p-6 text-xl font-bold flex justify-between items-center cursor-pointer" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+      <aside className={`bg-slate-900 text-white transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20 shrink-0'}`}>
+        <div className="p-6 text-xl font-bold flex justify-between items-center cursor-pointer hover:bg-slate-800 transition" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
           {isSidebarOpen && <span>AdminPanel</span>}
           <span>☰</span>
         </div>
@@ -34,7 +31,7 @@ export default function App() {
             <button
               key={item.name}
               onClick={() => setActiveView(item.name)}
-              className={`flex items-center w-full p-4 hover:bg-slate-800 transition ${activeView === item.name ? 'border-l-4 border-blue-500 bg-slate-800' : ''}`}
+              className={`flex items-center w-full p-4 hover:bg-slate-800 transition ${activeView === item.name ? 'border-l-4 border-[#f2b938] bg-slate-800 text-[#f2b938]' : ''}`}
             >
               <Icon d={item.icon} />
               {isSidebarOpen && <span className="ml-4 text-sm font-medium">{item.name}</span>}
@@ -43,19 +40,21 @@ export default function App() {
         </nav>
       </aside>
 
-      {/* Content */}
-      <main className="flex-1 overflow-y-auto">
-        <header className="bg-white p-6 shadow-sm border-b flex justify-between items-center">
-          <h2 className="text-xl font-bold uppercase tracking-wider text-slate-700">{activeView}</h2>
-          <button className="text-sm font-semibold text-red-600 hover:text-red-700">Logout</button>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <header className="bg-white p-5 shadow-sm border-b flex justify-between items-center shrink-0">
+          <h2 className="text-xl font-semibold uppercase tracking-wider text-slate-700">{activeView}</h2>
+          <button onClick={() => { localStorage.clear(); window.location.href = '/login'; }} className="text-sm font-medium text-red-500 hover:text-red-700 transition">
+            Logout
+          </button>
         </header>
 
-        <section className="p-8">
-          <div className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm min-h-[400px]">
-            {activeView === 'Dashboard' && <Content title="Welcome back, Admin" desc="Check your system stats." />}
-            {activeView === 'Users' && <Content title="User Management" desc="Manage, add, and remove user accounts." />}
-            {activeView === 'Courses' && <Content title="Course Manager" desc="Update lessons and track course progress." />}
-            {activeView === 'Settings' && <Content title="General Settings" desc="Configure your preferences." />}
+        <section className="p-6 md:p-8 flex-1 overflow-y-auto">
+          <div className="bg-white p-6 md:p-8 rounded-lg border border-gray-200 shadow-sm min-h-full">
+            {activeView === 'Dashboard' && <DashboardContent />}
+            {activeView === 'Users' && <UsersContent />}
+            {activeView === 'Courses' && <CoursesContent />}
+            {activeView === 'Settings' && <SettingsContent />}
           </div>
         </section>
       </main>
@@ -63,16 +62,246 @@ export default function App() {
   );
 }
 
-const Content = ({ title, desc }) => (
-  <div className="animate-in fade-in duration-500">
-    <h3 className="text-2xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-500">{desc}</p>
-    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {[1, 2, 3].map(i => (
-        <div key={i} className="bg-gray-50 p-6 rounded-lg border border-gray-100 h-32 flex items-center justify-center text-gray-400">
-          Widget {i}
+/* =========================================
+   1. DASHBOARD COMPONENT
+========================================= */
+const DashboardContent = () => {
+  const [stats, setStats] = useState({ courses: 0, users: 0 });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const courseRes = await fetch('http://localhost:5000/api/courses');
+        const courses = await courseRes.json();
+        // Agar backend me users ka get endpoint hai toh yahan call karein. 
+        // Abhi ke liye length le rahe hain.
+        setStats({ courses: courses.length || 0, users: 125 /* Mock user count */ });
+      } catch (err) {
+        console.error("Failed to load stats");
+      }
+    };
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <h3 className="text-2xl font-semibold text-slate-800 mb-2">System Overview</h3>
+      <p className="text-gray-500 mb-8">Welcome back! Here is what's happening on your platform today.</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-blue-50 border border-blue-100 p-6 rounded-lg">
+          <p className="text-blue-600 text-sm font-semibold uppercase tracking-wider mb-1">Total Courses</p>
+          <h4 className="text-4xl font-bold text-blue-900">{stats.courses}</h4>
         </div>
-      ))}
+        <div className="bg-green-50 border border-green-100 p-6 rounded-lg">
+          <p className="text-green-600 text-sm font-semibold uppercase tracking-wider mb-1">Total Users</p>
+          <h4 className="text-4xl font-bold text-green-900">{stats.users}</h4>
+        </div>
+        <div className="bg-amber-50 border border-amber-100 p-6 rounded-lg">
+          <p className="text-amber-600 text-sm font-semibold uppercase tracking-wider mb-1">Active Sessions</p>
+          <h4 className="text-4xl font-bold text-amber-900">42</h4>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* =========================================
+   2. COURSES COMPONENT (Full CRUD)
+========================================= */
+const CoursesContent = () => {
+  const [courses, setCourses] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ title: '', category: '', description: '', image_url: '' });
+  const [editingId, setEditingId] = useState(null);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/courses');
+      const data = await response.json();
+      setCourses(data);
+    } catch (err) {
+      console.error("Error fetching courses", err);
+    }
+  };
+
+  useEffect(() => { fetchCourses(); }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const url = editingId ? `http://localhost:5000/api/courses/${editingId}` : 'http://localhost:5000/api/courses';
+    const method = editingId ? 'PUT' : 'POST';
+
+    try {
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(formData)
+      });
+      setIsModalOpen(false);
+      setFormData({ title: '', category: '', description: '', image_url: '' });
+      setEditingId(null);
+      fetchCourses();
+    } catch (err) {
+      alert("Error saving course");
+    }
+  };
+
+  const handleEdit = (course) => {
+    setEditingId(course.id);
+    setFormData(course);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    const token = localStorage.getItem('token');
+    try {
+      await fetch(`http://localhost:5000/api/courses/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      fetchCourses();
+    } catch (err) {
+      alert("Error deleting course");
+    }
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500 relative min-h-[400px]">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-2xl font-semibold text-slate-800">Course Manager</h3>
+          <p className="text-gray-500 text-sm">Add, update, or remove courses from the catalog.</p>
+        </div>
+        <button 
+          onClick={() => { setEditingId(null); setFormData({title:'', category:'', description:'', image_url:''}); setIsModalOpen(true); }}
+          className="bg-[#f2b938] hover:bg-[#dfa728] text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition"
+        >
+          + Add New Course
+        </button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+              <th className="p-3 border-b">ID</th>
+              <th className="p-3 border-b">Course Title</th>
+              <th className="p-3 border-b">Category</th>
+              <th className="p-3 border-b text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-700 text-sm">
+            {courses.length === 0 && <tr><td colSpan="4" className="text-center p-4">No courses found.</td></tr>}
+            {courses.map(course => (
+              <tr key={course.id} className="border-b hover:bg-gray-50">
+                <td className="p-3">{course.id}</td>
+                <td className="p-3 font-medium text-slate-800">{course.title}</td>
+                <td className="p-3"><span className="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">{course.category}</span></td>
+                <td className="p-3 flex justify-center gap-3">
+                  <button onClick={() => handleEdit(course)} className="text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => handleDelete(course.id)} className="text-red-600 hover:underline">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Add/Edit Modal */}
+      {isModalOpen && (
+        <div className="absolute inset-0 bg-white/90 backdrop-blur-sm z-10 flex items-center justify-center p-4">
+          <form onSubmit={handleSubmit} className="bg-white border border-gray-200 shadow-xl rounded-lg p-6 w-full max-w-md">
+            <h4 className="text-lg font-bold mb-4">{editingId ? 'Edit Course' : 'Create New Course'}</h4>
+            <div className="space-y-3">
+              <input required type="text" placeholder="Course Title" className="w-full border p-2 rounded focus:outline-[#f2b938]" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+              <input required type="text" placeholder="Category (e.g., Literacy)" className="w-full border p-2 rounded focus:outline-[#f2b938]" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+              <textarea placeholder="Description" className="w-full border p-2 rounded h-24 focus:outline-[#f2b938]" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+              <input type="text" placeholder="Image URL" className="w-full border p-2 rounded focus:outline-[#f2b938]" value={formData.image_url} onChange={e => setFormData({...formData, image_url: e.target.value})} />
+            </div>
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Cancel</button>
+              <button type="submit" className="px-4 py-2 bg-[#f2b938] text-white rounded hover:bg-[#dfa728]">Save</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* =========================================
+   3. USERS COMPONENT 
+========================================= */
+const UsersContent = () => {
+  // Yahan aapke backend se user data aayega. 
+  // (Abhi UI dikhane ke liye mock data rakha hai, ise fetch API se replace kar sakte hain)
+  const dummyUsers = [
+    { id: 1, username: 'admin', email: 'admin@moodle.com', role: 'admin' },
+    { id: 2, username: 'john_doe', email: 'john@example.com', role: 'user' },
+    { id: 3, username: 'sara_smith', email: 'sara@example.com', role: 'user' }
+  ];
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <h3 className="text-2xl font-semibold text-slate-800 mb-2">User Management</h3>
+      <p className="text-gray-500 text-sm mb-6">View and manage registered users on the platform.</p>
+      
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+            <th className="p-3 border-b">ID</th>
+            <th className="p-3 border-b">Username</th>
+            <th className="p-3 border-b">Email</th>
+            <th className="p-3 border-b">Role</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-700 text-sm">
+          {dummyUsers.map(user => (
+            <tr key={user.id} className="border-b hover:bg-gray-50">
+              <td className="p-3">{user.id}</td>
+              <td className="p-3 font-medium">{user.username}</td>
+              <td className="p-3">{user.email}</td>
+              <td className="p-3">
+                <span className={`px-2 py-1 text-xs rounded-full ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
+                  {user.role}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+/* =========================================
+   4. SETTINGS COMPONENT
+========================================= */
+const SettingsContent = () => (
+  <div className="animate-in fade-in duration-500 max-w-2xl">
+    <h3 className="text-2xl font-semibold text-slate-800 mb-2">General Settings</h3>
+    <p className="text-gray-500 text-sm mb-6">Configure platform preferences.</p>
+    
+    <div className="space-y-6">
+      <div className="bg-gray-50 p-5 rounded border border-gray-200">
+        <h4 className="font-semibold text-gray-700 mb-2">Platform Name</h4>
+        <input type="text" defaultValue="Lambda Premium Moodle Theme" className="w-full border p-2 rounded focus:outline-[#f2b938]" />
+      </div>
+      
+      <div className="bg-gray-50 p-5 rounded border border-gray-200">
+        <h4 className="font-semibold text-gray-700 mb-2">Allow New Registrations</h4>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" defaultChecked className="w-4 h-4 text-[#f2b938]" />
+          <span>Enable public registration page</span>
+        </label>
+      </div>
+
+      <button className="bg-[#f2b938] text-white px-6 py-2 rounded shadow-sm hover:bg-[#dfa728]">
+        Save Changes
+      </button>
     </div>
   </div>
 );

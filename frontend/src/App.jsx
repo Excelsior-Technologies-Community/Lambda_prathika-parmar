@@ -10,6 +10,7 @@ import CourseCatalog from './components/CourseCatalog';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
 import AdminDashboard from './Pages/AdminDashboard';
+import ContactUs from './Pages/ContactUsPage';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
       <Route path='/login' element={<LoginPage />} />
       <Route path='/register' element={<RegisterPage />} />
       <Route path='/admin' element={<AdminDashboard />} />
+      <Route path='/contact' element={<ContactUs />} />
       </Routes>
         </main>
 

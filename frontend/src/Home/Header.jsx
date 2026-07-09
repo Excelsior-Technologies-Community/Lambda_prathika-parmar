@@ -113,7 +113,7 @@ export default function Header() {
               </button>
               <div className="absolute left-0 top-full hidden group-hover:block w-56 bg-white text-gray-800 shadow-xl rounded-b border-t-2 border-lambda-primary py-2 z-50">
                 <a href="/about" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">About Us</a>
-                <a href="#contactus" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Contact Us</a>
+                <a href="/contact" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Contact Us</a>
                 <a href="/image" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Image Gallery</a>
                 <a href="#faq" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">FAQ</a>
                 <a href="/login" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Login Page</a>

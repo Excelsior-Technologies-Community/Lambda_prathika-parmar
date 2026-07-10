@@ -14,7 +14,7 @@ export const submitForm = async(req, res) => {
 
 export const allMessages = async (req, res) => {
     try {
-        const messages = await Message.getAllMessages;
+        const messages = await Message.getAllMessages();
         res.status(200).json(messages);
     } catch (err) {
         console.error("Error fetching courses:", err);

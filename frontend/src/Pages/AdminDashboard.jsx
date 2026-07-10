@@ -15,6 +15,7 @@ export default function AdminPanel() {
     { name: 'Dashboard', icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
     { name: 'Users', icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
     { name: 'Courses', icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
+    { name: 'Messages', icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
     { name: 'Settings', icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
   ];
 
@@ -54,6 +55,7 @@ export default function AdminPanel() {
             {activeView === 'Dashboard' && <DashboardContent />}
             {activeView === 'Users' && <UsersContent />}
             {activeView === 'Courses' && <CoursesContent />}
+            {activeView === 'Messages' && <MessagesContent />}
             {activeView === 'Settings' && <SettingsContent />}
           </div>
         </section>
@@ -66,16 +68,18 @@ export default function AdminPanel() {
    1. DASHBOARD COMPONENT
 ========================================= */
 const DashboardContent = () => {
-  const [stats, setStats] = useState({ courses: 0, users: 0 });
+  const [stats, setStats] = useState({ courses: 0, users: 0, messages: 0 });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const courseRes = await fetch('http://localhost:5000/api/courses');
         const courses = await courseRes.json();
-        // Agar backend me users ka get endpoint hai toh yahan call karein. 
-        // Abhi ke liye length le rahe hain.
-        setStats({ courses: courses.length || 0, users: 125 /* Mock user count */ });
+        
+        const msgRes = await fetch('http://localhost:5000/api/contact');
+        const messages = await msgRes.json();
+        
+        setStats({ courses: courses.length || 0, users: 125, messages: messages.length || 0 });
       } catch (err) {
         console.error("Failed to load stats");
       }
@@ -96,6 +100,10 @@ const DashboardContent = () => {
         <div className="bg-green-50 border border-green-100 p-6 rounded-lg">
           <p className="text-green-600 text-sm font-semibold uppercase tracking-wider mb-1">Total Users</p>
           <h4 className="text-4xl font-bold text-green-900">{stats.users}</h4>
+        </div>
+        <div className="bg-purple-50 border border-purple-100 p-6 rounded-lg">
+          <p className="text-purple-600 text-sm font-semibold uppercase tracking-wider mb-1">Messages</p>
+          <h4 className="text-4xl font-bold text-purple-900">{stats.messages}</h4>
         </div>
         <div className="bg-amber-50 border border-amber-100 p-6 rounded-lg">
           <p className="text-amber-600 text-sm font-semibold uppercase tracking-wider mb-1">Active Sessions</p>
@@ -236,8 +244,6 @@ const CoursesContent = () => {
    3. USERS COMPONENT 
 ========================================= */
 const UsersContent = () => {
-  // Yahan aapke backend se user data aayega. 
-  // (Abhi UI dikhane ke liye mock data rakha hai, ise fetch API se replace kar sakte hain)
   const dummyUsers = [
     { id: 1, username: 'admin', email: 'admin@moodle.com', role: 'admin' },
     { id: 2, username: 'john_doe', email: 'john@example.com', role: 'user' },
@@ -278,7 +284,73 @@ const UsersContent = () => {
 };
 
 /* =========================================
-   4. SETTINGS COMPONENT
+   4. MESSAGES COMPONENT (NAYA PANEL)
+========================================= */
+const MessagesContent = () => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/contact');
+        const data = await response.json();
+        setMessages(data);
+      } catch (err) {
+        console.error("Error fetching messages", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMessages();
+  }, []);
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <h3 className="text-2xl font-semibold text-slate-800 mb-2">Contact Messages</h3>
+      <p className="text-gray-500 text-sm mb-6">View inquiries and messages submitted via the Contact Us form.</p>
+      
+      {loading ? (
+        <p className="text-gray-500">Loading messages...</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+                <th className="p-3 border-b">Date</th>
+                <th className="p-3 border-b">Name</th>
+                <th className="p-3 border-b">Email</th>
+                <th className="p-3 border-b">Subject</th>
+                <th className="p-3 border-b w-1/3">Message</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700 text-sm">
+              {messages.length === 0 && (
+                <tr><td colSpan="5" className="text-center p-4">No messages found.</td></tr>
+              )}
+              {messages.map(msg => (
+                <tr key={msg.id} className="border-b hover:bg-gray-50 align-top">
+                  <td className="p-3 whitespace-nowrap">
+                    {new Date(msg.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="p-3 font-medium">{msg.name}</td>
+                  <td className="p-3 text-blue-600">
+                    <a href={`mailto:${msg.email}`}>{msg.email}</a>
+                  </td>
+                  <td className="p-3 font-medium">{msg.subject}</td>
+                  <td className="p-3 text-gray-600">{msg.message}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* =========================================
+   5. SETTINGS COMPONENT
 ========================================= */
 const SettingsContent = () => (
   <div className="animate-in fade-in duration-500 max-w-2xl">

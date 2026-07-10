@@ -11,6 +11,8 @@ import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
 import AdminDashboard from './Pages/AdminDashboard';
 import ContactUs from './Pages/ContactUsPage';
+import FAQPage from './Pages/FAQPage';
+import DocumentationPage from './Pages/DocumentationPage';
 
 function App() {
 
@@ -31,6 +33,8 @@ function App() {
       <Route path='/register' element={<RegisterPage />} />
       <Route path='/admin' element={<AdminDashboard />} />
       <Route path='/contact' element={<ContactUs />} />
+      <Route path='/faq' element={<FAQPage />} />
+      <Route path='/documentationpage' element={<DocumentationPage />} />
       </Routes>
         </main>
 

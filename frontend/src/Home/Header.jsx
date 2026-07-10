@@ -115,13 +115,13 @@ export default function Header() {
                 <a href="/about" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">About Us</a>
                 <a href="/contact" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Contact Us</a>
                 <a href="/image" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Image Gallery</a>
-                <a href="#faq" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">FAQ</a>
+                <a href="/faq" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">FAQ</a>
                 <a href="/login" className="block px-4 py-2 text-sm hover:bg-slate-100 hover:text-lambda-primary font-medium">Login Page</a>
               </div>
             </div>
 
             {/* Direct Links */}
-            <a href="#docs" className="px-4 h-full text-sm font-medium hover:text-white hover:bg-black/20 flex items-center">Documentation</a>
+            <a href="/docs" className="px-4 h-full text-sm font-medium hover:text-white hover:bg-black/20 flex items-center">Documentation</a>
           </div>
 
           {/* Search Button */}

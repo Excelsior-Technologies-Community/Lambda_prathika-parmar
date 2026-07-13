@@ -13,6 +13,7 @@ import AdminDashboard from './Pages/AdminDashboard';
 import ContactUs from './Pages/ContactUsPage';
 import FAQPage from './Pages/FAQPage';
 import DocumentationPage from './Pages/DocumentationPage';
+import ComponentPage from './Pages/ComponentPage';
 
 function App() {
 
@@ -34,7 +35,8 @@ function App() {
       <Route path='/admin' element={<AdminDashboard />} />
       <Route path='/contact' element={<ContactUs />} />
       <Route path='/faq' element={<FAQPage />} />
-      <Route path='/documentationpage' element={<DocumentationPage />} />
+      <Route path='/docs' element={<DocumentationPage />} />
+      <Route path='/components' element={<ComponentPage/>} />
       </Routes>
         </main>
 

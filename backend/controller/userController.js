@@ -35,7 +35,6 @@ const UserController = {
 
             //jwt token
 
-            // NAYA CODE: role aur secret key mein fallback add kiya hai
 const token = jwt.sign(
     { id: user.id, role: user.role || 'user' }, // Agar role nahi hai toh default 'user' maan lega
     process.env.JWT_SECRET || 'your_secret_key', 
@@ -51,6 +50,16 @@ const token = jwt.sign(
             });
 
         } catch (error) {
+            console.error("Server Error:", error);
+            res.status(500).json({ error: 'Server error' });
+        }
+    },
+
+    getAllUsers: async (req, res) => {
+        try{
+            const users = await UserModel.getAllUsers();
+            res.status(200).json(users);
+        }catch(error){
             console.error("Server Error:", error);
             res.status(500).json({ error: 'Server error' });
         }

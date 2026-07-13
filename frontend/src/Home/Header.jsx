@@ -19,8 +19,7 @@ export default function Header() {
           {/* Top Row on Mobile / Left on Desktop: Logo + Hamburger */}
           <div className="flex items-center justify-between w-full lg:w-auto">
             <a href="/" className="flex items-center gap-3.5 group text-decoration-none">
-                              <img src="https://lambda-demo-01.redpithemes.com/pluginfile.php/1/core_admin/logo/0x200/1758302184/logo-site-01.png" alt="" />
-
+              <img src="https://lambda-demo-01.redpithemes.com/pluginfile.php/1/core_admin/logo/0x200/1758302184/logo-site-01.png" alt="Lambda Logo" />
             </a>
 
             {/* Mobile Hamburger Button (Only toggles the navigation links now) */}
@@ -42,7 +41,8 @@ export default function Header() {
                 <span className="px-2.5 bg-gray-100 border-r border-gray-300 text-gray-500 h-full flex items-center">
                   <FaUser className="text-xs" />
                 </span>
-                <input type="text" placeholder="Username" className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
+                {/* FIXED: Added autoComplete="username" below */}
+                <input type="text" placeholder="Username" autoComplete="username" className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
               </div>
 
               {/* Password Input */}
@@ -50,7 +50,7 @@ export default function Header() {
                 <span className="px-2.5 bg-gray-100 border-r border-gray-300 text-gray-500 h-full flex items-center">
                   <FaLock className="text-xs" />
                 </span>
-                <input type="password" placeholder="Password" autoComplete='current-password' className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
+                <input type="password" placeholder="Password" autoComplete="current-password" className="px-3 text-sm text-gray-700 bg-transparent focus:outline-none w-full" />
               </div>
 
               {/* Submit Button */}
@@ -149,7 +149,7 @@ export default function Header() {
               </button>
               {mobileDropdown === 'courses' && (
                 <div className="pl-4 py-2 space-y-2 border-l border-slate-700 mt-1 text-sm text-gray-400">
-                  <a href="#all" className="block hover:text-white">All courses</a>
+                  <a href="/courses" className="block hover:text-white">All courses</a>
                   <a href="#sample" className="block hover:text-white">Sample course</a>
                   <a href="#tiles" className="block hover:text-white">Tiles course format</a>
                 </div>
@@ -164,14 +164,15 @@ export default function Header() {
               </button>
               {mobileDropdown === 'features' && (
                 <div className="pl-4 py-2 space-y-2 border-l border-slate-700 mt-1 text-sm text-gray-400">
-                  <a href="#type" className="block hover:text-white">Typography</a>
+                  <a href="/features" className="block hover:text-white">Typography</a>
                   <a href="#core" className="block hover:text-white">Theme Core Features</a>
                 </div>
               )}
             </div>
 
             <a href="#pages" className="block py-2 font-medium hover:text-white">Pages</a>
-            <a href="#docs" className="block py-2 font-medium hover:text-white">Documentation</a>
+            {/* FIXED: Changed href from #docs to /docs */}
+            <a href="/docs" className="block py-2 font-medium hover:text-white">Documentation</a>
             
           </div>
         </div>

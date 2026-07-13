@@ -14,3 +14,15 @@ export const createUser = async (username, email, password) => {
     );
     return result;
 };
+
+export const getAllUsers = async () => {
+
+    try{
+    const [rows] = await db.execute("SELECT * FROM users");
+    return rows;
+    }catch(err){
+        throw error;
+    }
+    
+
+};

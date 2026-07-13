@@ -75,11 +75,14 @@ const DashboardContent = () => {
       try {
         const courseRes = await fetch('http://localhost:5000/api/courses');
         const courses = await courseRes.json();
+
+        const userRes = await fetch('http://localhost:5000/api/users');
+        const users = await userRes.json();
         
         const msgRes = await fetch('http://localhost:5000/api/contact');
         const messages = await msgRes.json();
         
-        setStats({ courses: courses.length || 0, users: 125, messages: messages.length || 0 });
+        setStats({ courses: courses.length || 0, users: users.length || 0, messages: messages.length || 0 });
       } catch (err) {
         console.error("Failed to load stats");
       }
@@ -244,17 +247,33 @@ const CoursesContent = () => {
    3. USERS COMPONENT 
 ========================================= */
 const UsersContent = () => {
-  const dummyUsers = [
-    { id: 1, username: 'admin', email: 'admin@moodle.com', role: 'admin' },
-    { id: 2, username: 'john_doe', email: 'john@example.com', role: 'user' },
-    { id: 3, username: 'sara_smith', email: 'sara@example.com', role: 'user' }
-  ];
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try{
+        const response = await fetch('http://localhost:5000/api/users');
+        if(!response.ok) throw new Error("Failed to fetch users");
+        const data = await response.json();
+        setUsers(data);
+
+      }catch(err){
+        console.error("Error fetching users", err);
+        setError("Failed to load users");
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if(loading) return <p className="text-gray-500">Loading users...</p>;
+  if(error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="animate-in fade-in duration-500">
-      <h3 className="text-2xl font-semibold text-slate-800 mb-2">User Management</h3>
-      <p className="text-gray-500 text-sm mb-6">View and manage registered users on the platform.</p>
-      
+    <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
@@ -265,18 +284,24 @@ const UsersContent = () => {
           </tr>
         </thead>
         <tbody className="text-gray-700 text-sm">
-          {dummyUsers.map(user => (
-            <tr key={user.id} className="border-b hover:bg-gray-50">
-              <td className="p-3">{user.id}</td>
-              <td className="p-3 font-medium">{user.username}</td>
-              <td className="p-3">{user.email}</td>
-              <td className="p-3">
-                <span className={`px-2 py-1 text-xs rounded-full ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
-                  {user.role}
-                </span>
-              </td>
-            </tr>
-          ))}
+          {users.length === 0 ? (
+             <tr>
+               <td colSpan="4" className="p-4 text-center text-gray-500">No users found.</td>
+             </tr>
+          ) : (
+            users.map(user => (
+              <tr key={user.id} className="border-b hover:bg-gray-50">
+                <td className="p-3">{user.id}</td>
+                <td className="p-3 font-medium">{user.username}</td>
+                <td className="p-3">{user.email}</td>
+                <td className="p-3">
+                  <span className={`px-2 py-1 text-xs rounded-full ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
+                    {user.role}
+                  </span>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
@@ -284,7 +309,7 @@ const UsersContent = () => {
 };
 
 /* =========================================
-   4. MESSAGES COMPONENT (NAYA PANEL)
+   4. MESSAGES COMPONENT 
 ========================================= */
 const MessagesContent = () => {
   const [messages, setMessages] = useState([]);
